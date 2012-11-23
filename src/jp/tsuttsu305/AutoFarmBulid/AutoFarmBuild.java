@@ -8,12 +8,11 @@ public class AutoFarmBuild extends JavaPlugin {
 	public static AutoFarmBuild plugin;
 	Logger logger = Logger.getLogger("Minecraft");
 
-
 	public void onEnable(){
-		getServer().getPluginManager().registerEvents(new PlayerClick(), this);
+		getServer().getPluginManager().registerEvents(new PlayerClick(this), this);
+
+		if (getServer().getPluginManager().isPluginEnabled("WorldGuard")){
+			logger.info("AutoFarmBulid hooked WorldGuard");
+		}
 	}
-
-
-
-
 }

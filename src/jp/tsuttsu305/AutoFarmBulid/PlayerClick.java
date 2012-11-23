@@ -9,8 +9,27 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.plugin.Plugin;
+
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public class PlayerClick implements Listener {
+	private AutoFarmBuild afb = null;
+
+	public PlayerClick(AutoFarmBuild afb) {
+		// TODO 自動生成されたコンストラクター・スタブ
+		this.afb = afb;
+	}
+
+	//WorldGuard使用時
+	private WorldGuardPlugin getWorldGuard() {
+		Plugin plugin = afb.getServer().getPluginManager().getPlugin("WorldGuard");
+		// WorldGuard may not be loaded
+		if (plugin == null || !(plugin instanceof WorldGuardPlugin)) {
+			return null; // Maybe you want throw an exception instead
+		}
+		return (WorldGuardPlugin) plugin;
+	}
 
 	@EventHandler
 	public void onPlayerRightClick(PlayerInteractEvent event){
@@ -27,7 +46,7 @@ public class PlayerClick implements Listener {
 				//click先のMaterialで判定
 				switch(playerClickBl.getType()){
 					case MOSSY_COBBLESTONE:	//苔石 - 小麦畑
-						if (blockSearch(playerClickBl)){
+						if (blockSearch(playerClickBl, player)){
 							if (player.getItemInHand().getDurability()+80 <= 1563){
 								bulidFarm(playerClickBl, Material.CROPS);
 								short du = player.getItemInHand().getDurability();
@@ -38,7 +57,7 @@ public class PlayerClick implements Listener {
 						}
 						break;
 					case BRICK://レンガ　－　ほてと
-						if (blockSearch(playerClickBl)){
+						if (blockSearch(playerClickBl, player)){
 							if (player.getItemInHand().getDurability()+80 <= 1563){
 								bulidFarm(playerClickBl, Material.POTATO);
 								short du = player.getItemInHand().getDurability();
@@ -49,7 +68,7 @@ public class PlayerClick implements Listener {
 						}
 						break;
 					case NETHER_BRICK: //ネザーのレンガ　－　人参
-						if (blockSearch(playerClickBl)){
+						if (blockSearch(playerClickBl, player)){
 							if (player.getItemInHand().getDurability()+80 <= 1563){
 								bulidFarm(playerClickBl, Material.CARROT);
 								short du = player.getItemInHand().getDurability();
@@ -60,7 +79,7 @@ public class PlayerClick implements Listener {
 						}
 						break;
 					case BOOKSHELF: //本棚 - サトウキビ
-						if (blockSearchEx(playerClickBl)){
+						if (blockSearchEx(playerClickBl, player)){
 							if (player.getItemInHand().getDurability()+100 <= 1563){
 								sato(playerClickBl);
 								short du = player.getItemInHand().getDurability();
@@ -113,19 +132,24 @@ public class PlayerClick implements Listener {
 	}
 
 	//地面側の中心Block情報を渡す
-	public boolean blockSearch(Block bl){
+	public boolean blockSearch(Block bl, Player pl){
 		bl = bl.getRelative(0, -2, 0);
 		int x=-3,  z=-3;
 		//障害物がないか判定
 		//土か草ブロック
 		for (x = -3;x<=3;x++){
 			for (z = -3;z<=3;z++){
-				switch(bl.getRelative(x, 0, z).getType()){
-					case DIRT:
-					case GRASS:
-						break;
-					default:
-						return false;
+				if(getWorldGuard().canBuild(pl, bl.getRelative(x, 0, z))){
+					switch(bl.getRelative(x, 0, z).getType()){
+						case DIRT:
+						case GRASS:
+							break;
+						default:
+							return false;
+					}
+				}else{
+					pl.sendMessage(ChatColor.RED + "建設権限がない領域があります!!!");
+					return false;
 				}
 			}
 		}
@@ -147,20 +171,25 @@ public class PlayerClick implements Listener {
 	}
 
 	//地面側の中心Block情報を渡す
-	public boolean blockSearchEx(Block bl){
+	public boolean blockSearchEx(Block bl, Player pl){
 		bl = bl.getRelative(0, -2, 0);
 		int x=-4,  z=-4;
 		//障害物がないか判定
 		//土か草ブロック
 		for (x = -4;x<=4;x++){
 			for (z = -4;z<=4;z++){
-				switch(bl.getRelative(x, 0, z).getType()){
-					case DIRT:
-					case GRASS:
-					case SAND:
-						break;
-					default:
-						return false;
+				if(getWorldGuard().canBuild(pl, bl.getRelative(x, 0, z))){
+					switch(bl.getRelative(x, 0, z).getType()){
+						case DIRT:
+						case GRASS:
+						case SAND:
+							break;
+						default:
+							return false;
+					}
+				}else{
+					pl.sendMessage(ChatColor.RED + "建設権限がない領域があります!!!");
+					return false;
 				}
 			}
 		}

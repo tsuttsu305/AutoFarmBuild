@@ -8,5 +8,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="D:/WorldGuard.jar"/>
+	<classpathentry kind="lib" path="D:/HawkEye.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -10,14 +10,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-public class PlayerClick implements Listener {
+public class PlayerClick implements Listener  {
 	private AutoFarmBuild afb = null;
 
 	public PlayerClick(AutoFarmBuild afb) {
 		// TODO 自動生成されたコンストラクター・スタブ
 		this.afb = afb;
 	}
-
 
 
 	@EventHandler
@@ -37,7 +36,7 @@ public class PlayerClick implements Listener {
 					case MOSSY_COBBLESTONE:	//苔石 - 小麦畑
 						if (blockSearch(playerClickBl, player)){
 							if (player.getItemInHand().getDurability()+80 <= 1563){
-								bulidFarm(playerClickBl, Material.CROPS);
+								bulidFarm(playerClickBl, Material.CROPS, player);
 								short du = player.getItemInHand().getDurability();
 								player.getItemInHand().setDurability((short) (du+80));
 							}else{
@@ -48,7 +47,7 @@ public class PlayerClick implements Listener {
 					case BRICK://レンガ　－　ほてと
 						if (blockSearch(playerClickBl, player)){
 							if (player.getItemInHand().getDurability()+80 <= 1563){
-								bulidFarm(playerClickBl, Material.POTATO);
+								bulidFarm(playerClickBl, Material.POTATO, player);
 								short du = player.getItemInHand().getDurability();
 								player.getItemInHand().setDurability((short) (du+80));
 							}else{
@@ -59,7 +58,7 @@ public class PlayerClick implements Listener {
 					case NETHER_BRICK: //ネザーのレンガ　－　人参
 						if (blockSearch(playerClickBl, player)){
 							if (player.getItemInHand().getDurability()+80 <= 1563){
-								bulidFarm(playerClickBl, Material.CARROT);
+								bulidFarm(playerClickBl, Material.CARROT, player);
 								short du = player.getItemInHand().getDurability();
 								player.getItemInHand().setDurability((short) (du+80));
 							}else{
@@ -70,7 +69,7 @@ public class PlayerClick implements Listener {
 					case BOOKSHELF: //本棚 - サトウキビ
 						if (blockSearchEx(playerClickBl, player)){
 							if (player.getItemInHand().getDurability()+100 <= 1563){
-								sato(playerClickBl);
+								sato(playerClickBl, player);
 								short du = player.getItemInHand().getDurability();
 								player.getItemInHand().setDurability((short) (du+100));
 							}else{
@@ -87,7 +86,7 @@ public class PlayerClick implements Listener {
 	}
 
 	//畑生成 小麦　じゃがいも　人参
-	public void bulidFarm(Block bl, Material ma){
+	public void bulidFarm(Block bl, Material ma, Player pl){
 		//7x7
 		//bl には苔石のBlock情報
 		//地面の中心を取得
@@ -96,6 +95,11 @@ public class PlayerClick implements Listener {
 		//地面側を農地に置き換え
 		for (x = -3;x<=3;x++){
 			for (z = -3;z<=3;z++){
+				/*//HawkEye判定
+				if (afb.hawkeyeFlag == true){
+					//ロギング
+					log.hawkBr(pl, center.getRelative(x, 0, z));
+				}*/
 				center.getRelative(x, 0, z).setType(Material.SOIL);
 			}
 		}
@@ -104,6 +108,11 @@ public class PlayerClick implements Listener {
 		for (x = -3;x<=3;x++){
 			for (z = -3;z<=3;z++){
 				if (!(x == 0 && z == 0)){
+					/*//HawkEye判定
+					if (afb.hawkeyeFlag == true){
+						//ロギング
+						log.hawkPl(pl, center.getRelative(x, 1, z));
+					}*/
 					center.getRelative(x, 1, z).setType(ma);
 				}
 			}
@@ -224,7 +233,7 @@ public class PlayerClick implements Listener {
 	}
 
 	//サトウキビ
-	public void sato(Block bl){
+	public void sato(Block bl, Player pl){
 		//4x4
 		//地面の中心を取得
 		Block center = bl.getRelative(0, -2, 0);
@@ -232,6 +241,11 @@ public class PlayerClick implements Listener {
 		for (int x = -4; x <= 4;x++){
 			for (int z = -4;z <= 4;z++){
 				if (Math.abs(z) % 3 == 0){
+					/*//HawkEye判定
+					if (afb.hawkeyeFlag == true){
+						//ロギング
+						log.hawkBr(pl, center.getRelative(x, 0, z));
+					}*/
 					center.getRelative(x, 0, z).setType(Material.WATER);
 				}
 			}
@@ -240,8 +254,18 @@ public class PlayerClick implements Listener {
 		for (int x = -4; x <= 4;x++){
 			for (int z = -4;z <= 4;z++){
 				if (Math.abs(z) % 3 == 0){
+					/*//HawkEye判定
+					if (afb.hawkeyeFlag == true){
+						//ロギング
+						log.hawkPl(pl, center.getRelative(x, 1, z));
+					}*/
 					center.getRelative(x, 1, z).setType(Material.WOOD_STEP);
 				}else{
+					/*//HawkEye判定
+					if (afb.hawkeyeFlag == true){
+						//ロギング
+						log.hawkPl(pl, center.getRelative(x, 1, z));
+					}*/
 					center.getRelative(x, 1, z).setType(Material.SUGAR_CANE_BLOCK);
 				}
 			}
@@ -251,7 +275,6 @@ public class PlayerClick implements Listener {
 		center.getRelative(BlockFace.UP).getRelative(BlockFace.UP).setType(Material.AIR);
 
 	}
-
 }
 
 

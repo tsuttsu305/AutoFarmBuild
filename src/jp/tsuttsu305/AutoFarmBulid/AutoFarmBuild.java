@@ -11,10 +11,11 @@ public class AutoFarmBuild extends JavaPlugin {
 	public static AutoFarmBuild plugin;
 	Logger logger = Logger.getLogger("Minecraft");
 	public boolean wgs = false;
+	//public boolean hawkeyeFlag = false;
 
 	public void onEnable(){
 		getServer().getPluginManager().registerEvents(new PlayerClick(this), this);
-
+		//WorldGuardチェック
 		if (getServer().getPluginManager().isPluginEnabled("WorldGuard")){
 			//WorldGuard使用フラグ
 			wgs = true;
@@ -22,6 +23,15 @@ public class AutoFarmBuild extends JavaPlugin {
 		}else{
 			wgs = false;
 		}
+
+		/*//HawkEyeチェック
+		if (getServer().getPluginManager().isPluginEnabled("HawkEye")){
+			//HawkEye Flag
+			hawkeyeFlag = true;
+			logger.info("AutoFarmBulid hooked to Hawkeye");
+		}else{
+			hawkeyeFlag = false;
+		}*/
 	}
 	//WorldGuard使用時
 		private WorldGuardPlugin getWorldGuard() {

@@ -275,6 +275,15 @@ public class PlayerClick implements Listener  {
 		center.getRelative(BlockFace.UP).getRelative(BlockFace.UP).setType(Material.AIR);
 
 	}
+	/*//hawk 設置
+	public void hawkPl (Player pl, Block bl){
+		HawkEyeAPI.addEntry(afb, new BlockEntry(pl, DataType.BLOCK_PLACE, bl));
+	}
+
+	//hawk 破壊
+	public void hawkBr(Player pl, Block bl){
+		HawkEyeAPI.addEntry(afb, new BlockEntry(pl, DataType.BLOCK_BREAK, bl));
+	}*/
 }
 
 

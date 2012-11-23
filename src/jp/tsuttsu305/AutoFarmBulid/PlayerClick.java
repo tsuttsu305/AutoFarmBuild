@@ -9,9 +9,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.plugin.Plugin;
-
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public class PlayerClick implements Listener {
 	private AutoFarmBuild afb = null;
@@ -21,15 +18,7 @@ public class PlayerClick implements Listener {
 		this.afb = afb;
 	}
 
-	//WorldGuard使用時
-	private WorldGuardPlugin getWorldGuard() {
-		Plugin plugin = afb.getServer().getPluginManager().getPlugin("WorldGuard");
-		// WorldGuard may not be loaded
-		if (plugin == null || !(plugin instanceof WorldGuardPlugin)) {
-			return null; // Maybe you want throw an exception instead
-		}
-		return (WorldGuardPlugin) plugin;
-	}
+
 
 	@EventHandler
 	public void onPlayerRightClick(PlayerInteractEvent event){
@@ -139,7 +128,21 @@ public class PlayerClick implements Listener {
 		//土か草ブロック
 		for (x = -3;x<=3;x++){
 			for (z = -3;z<=3;z++){
-				if(getWorldGuard().canBuild(pl, bl.getRelative(x, 0, z))){
+				//wgフラグチェック
+				if (afb.wgs == true){
+					if(afb.wg().canBuild(pl, bl.getRelative(x, 0, z))){
+						switch(bl.getRelative(x, 0, z).getType()){
+							case DIRT:
+							case GRASS:
+								break;
+							default:
+								return false;
+						}
+					}else{
+						pl.sendMessage(ChatColor.RED + "建設権限がない領域があります!!!");
+						return false;
+					}
+				}else{
 					switch(bl.getRelative(x, 0, z).getType()){
 						case DIRT:
 						case GRASS:
@@ -147,11 +150,9 @@ public class PlayerClick implements Listener {
 						default:
 							return false;
 					}
-				}else{
-					pl.sendMessage(ChatColor.RED + "建設権限がない領域があります!!!");
-					return false;
 				}
 			}
+
 		}
 		//上の空間が空気か判定
 		for (x = -3;x<=3;x++){
@@ -178,7 +179,22 @@ public class PlayerClick implements Listener {
 		//土か草ブロック
 		for (x = -4;x<=4;x++){
 			for (z = -4;z<=4;z++){
-				if(getWorldGuard().canBuild(pl, bl.getRelative(x, 0, z))){
+				//wgフラグチェック
+				if (afb.wgs == true){
+					if(afb.wg().canBuild(pl, bl.getRelative(x, 0, z))){
+						switch(bl.getRelative(x, 0, z).getType()){
+							case DIRT:
+							case GRASS:
+							case SAND:
+								break;
+							default:
+								return false;
+						}
+					}else{
+						pl.sendMessage(ChatColor.RED + "建設権限がない領域があります!!!");
+						return false;
+					}
+				}else{
 					switch(bl.getRelative(x, 0, z).getType()){
 						case DIRT:
 						case GRASS:
@@ -187,9 +203,6 @@ public class PlayerClick implements Listener {
 						default:
 							return false;
 					}
-				}else{
-					pl.sendMessage(ChatColor.RED + "建設権限がない領域があります!!!");
-					return false;
 				}
 			}
 		}

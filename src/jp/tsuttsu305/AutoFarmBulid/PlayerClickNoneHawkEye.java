@@ -4,21 +4,16 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import uk.co.oliwali.HawkEye.DataType;
-import uk.co.oliwali.HawkEye.entry.BlockChangeEntry;
-import uk.co.oliwali.HawkEye.util.HawkEyeAPI;
-
-public class PlayerClick implements Listener  {
+public class PlayerClickNoneHawkEye implements Listener  {
 	private AutoFarmBuild afb = null;
 
-	public PlayerClick(AutoFarmBuild afb) {
+	public PlayerClickNoneHawkEye(AutoFarmBuild afb) {
 		this.afb = afb;
 	}
 
@@ -100,13 +95,7 @@ public class PlayerClick implements Listener  {
 		//地面側を農地に置き換え
 		for (x = -3;x<=3;x++){
 			for (z = -3;z<=3;z++){
-				BlockState bf = center.getRelative(x, 0, z).getState();
 				center.getRelative(x, 0, z).setType(Material.SOIL);
-				//HawkEye判定
-				if (afb.hawkeyeFlag == true){
-					//ロギング
-					hawkPl(pl,bf,  center.getRelative(x, 0, z).getState());
-				}
 			}
 		}
 
@@ -114,45 +103,19 @@ public class PlayerClick implements Listener  {
 		for (x = -3;x<=3;x++){
 			for (z = -3;z<=3;z++){
 				if (!(x == 0 && z == 0)){
-					//BlockState bf = center.getRelative(x, 1, z).getState();
 					center.getRelative(x, 1, z).setType(ma);
-					//HawkEye判定
-					/*if (afb.hawkeyeFlag == true){
-						//ロギング
-						hawkPl(pl,bf,  center.getRelative(x, 1, z).getState());
-					}*/
 				}
 			}
 		}
 
 		//中心を水源に置き換え。
-		BlockState cen = center.getState();
 		center.setType(Material.WATER);
-		//HawkEye判定
-		if (afb.hawkeyeFlag == true){
-			//ロギング
-			hawkPl(pl,cen,  center.getState());
-		}
-		
-		//土設置
-		BlockState cenUP = center.getRelative(BlockFace.UP).getState();
+
 		center.getRelative(BlockFace.UP).setType(Material.DIRT);
-		if (afb.hawkeyeFlag == true){
-			//ロギング
-			hawkPl(pl,cenUP,  center.getRelative(BlockFace.UP).getState());
-		}
-		
 		//苔石はドロップ
 		center.getRelative(BlockFace.UP).getRelative(BlockFace.UP).breakNaturally();
-		
 		//松明建てる
-		BlockState cenUPUP = center.getRelative(BlockFace.UP).getRelative(BlockFace.UP).getState();
 		center.getRelative(BlockFace.UP).getRelative(BlockFace.UP).setType(Material.TORCH);
-		if (afb.hawkeyeFlag == true){
-			//ロギング
-			hawkPl(pl,cenUPUP,  center.getRelative(BlockFace.UP).getRelative(BlockFace.UP).getState());
-		}
-		
 		return;
 	}
 
@@ -268,13 +231,7 @@ public class PlayerClick implements Listener  {
 		for (int x = -4; x <= 4;x++){
 			for (int z = -4;z <= 4;z++){
 				if (Math.abs(z) % 3 == 0){
-					BlockState bf = center.getRelative(x, 0, z).getState();
 					center.getRelative(x, 0, z).setType(Material.WATER);
-					//HawkEye判定
-					if (afb.hawkeyeFlag == true){
-						//ロギング
-						hawkPl(pl,bf, center.getRelative(x, 0, z).getState());
-					}
 				}
 			}
 		}
@@ -282,21 +239,9 @@ public class PlayerClick implements Listener  {
 		for (int x = -4; x <= 4;x++){
 			for (int z = -4;z <= 4;z++){
 				if (Math.abs(z) % 3 == 0){
-					BlockState bf = center.getRelative(x, 1, z).getState();
 					center.getRelative(x, 1, z).setType(Material.WOOD_STEP);
-					//HawkEye判定
-					if (afb.hawkeyeFlag == true){
-						//ロギング
-						hawkPl(pl,bf,  center.getRelative(x, 1, z).getState());
-					}
 				}else{
-					//BlockState bf = center.getRelative(x, 1, z).getState();
 					center.getRelative(x, 1, z).setType(Material.SUGAR_CANE_BLOCK);
-					//HawkEye判定
-					/*if (afb.hawkeyeFlag == true){
-						//ロギング
-						hawkPl(pl,bf,  center.getRelative(x, 1, z).getState());
-					}*/
 				}
 			}
 		}
@@ -304,11 +249,5 @@ public class PlayerClick implements Listener  {
 		//本棚破壊
 		center.getRelative(BlockFace.UP).getRelative(BlockFace.UP).setType(Material.AIR);
 
-	}
-	//hawk 設置
-	public void hawkPl (Player pl, BlockState bf, BlockState af){
-		if(afb.hawkeyeFlag) {
-			HawkEyeAPI.addEntry(afb, new BlockChangeEntry(pl, DataType.BLOCK_PLACE, bf.getLocation(), bf, af));
-		}
 	}
 }

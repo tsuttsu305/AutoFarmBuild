@@ -1,4 +1,5 @@
 name: AutoFarmBuild
 author: tsuttsu305
 main: jp.tsuttsu305.AutoFarmBulid.AutoFarmBuild
+depend: [WorldGuard, HawkEye]
 version: 1.00

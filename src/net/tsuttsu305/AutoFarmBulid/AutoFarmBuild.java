@@ -1,4 +1,4 @@
-package jp.tsuttsu305.AutoFarmBulid;
+package net.tsuttsu305.AutoFarmBulid;
 
 import java.util.logging.Logger;
 
